@@ -53,7 +53,7 @@ In simple words:
 
 ## Architecture
 
-![BugRelayAI High-Level Architecture](bug-triage-tool/docs/bugrelay-architecture.svg)
+![BugRelayAI High-Level Architecture](bug-triage-tool/docs/bugrelayai-high-level-architecture.svg)
 
 The diagram summarizes the current end-to-end flow: user actions in the browser UI, Node.js API routing, PostgreSQL persistence, RAG services, and optional GitHub/OpenAI integrations.
 
