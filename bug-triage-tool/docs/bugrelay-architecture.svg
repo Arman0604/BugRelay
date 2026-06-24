@@ -1,6 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1600" height="980" viewBox="0 0 1600 980" role="img" aria-labelledby="title desc">
   <title id="title">BugRelayAI High-Level Architecture</title>
-  <desc id="desc">Architecture diagram showing user, browser UI, Node API layer, PostgreSQL, RAG services, GitHub, and optional OpenAI integration.</desc>
+  <desc id="desc">Updated BugRelayAI architecture diagram showing the user, browser UI modules, Node API layer, PostgreSQL database, RAG services, ticket lifecycle, GitHub imports, and optional OpenAI analysis.</desc>
+  <metadata>
+    Updated 2026-06-24. Source of truth for the README architecture image.
+  </metadata>
   <defs>
     <marker id="arrow-blue" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
       <path d="M0,0 L0,6 L9,3 z" fill="#2563eb"/>
