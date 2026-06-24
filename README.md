@@ -1,6 +1,6 @@
 # BugRelayAI
 
-BugRelayAI is a full-stack bug triage tool that helps developers find, save, compare, and resolve bugs faster. It also helps developers and companies save AI tokens by avoiding repeated AI debugging for similar bugs.
+BugRelayAI is a full-stack RAG based bug triage tool that helps developers find, save, compare, and resolve bugs faster. It also helps developers and companies save AI tokens by avoiding repeated AI debugging for similar bugs.
 
 Instead of solving the same bug again and again, a developer can paste code, upload logs, import GitHub issues, or create tickets manually. BugRelayAI then searches past tickets and RAG documents to find similar bugs, suggested fixes, and useful context.
 
