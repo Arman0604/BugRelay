@@ -1,0 +1,549 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BugRelayAI - Automated Bug Triage Tool</title>
+  <meta name="description" content="AI-powered bug relay and triage tool. Upload error logs or source code to find similar bug tickets instantly using TF-IDF semantic search.">
+  <meta name="theme-color" content="#ffffff">
+  <meta http-equiv="Cache-Control" content="no-store">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='18' y1='12' x2='82' y2='88'%3E%3Cstop stop-color='%2322d3ee'/%3E%3Cstop offset='1' stop-color='%232563eb'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx='50' cy='50' r='44' fill='%23eff6ff'/%3E%3Cellipse cx='50' cy='58' rx='24' ry='27' fill='url(%23g)'/%3E%3Cpath d='M34 36c0-9 7-16 16-16s16 7 16 16v8H34v-8z' fill='url(%23g)'/%3E%3Cpath d='M25 45l-11-7M75 45l11-7M24 58H11M76 58h13M26 72l-11 7M74 72l11 7' stroke='%232563eb' stroke-width='5' stroke-linecap='round'/%3E%3Cpath d='M50 39v43' stroke='%23eff6ff' stroke-width='4' stroke-linecap='round' opacity='.9'/%3E%3Ccircle cx='41' cy='55' r='4' fill='white' opacity='.9'/%3E%3Ccircle cx='59' cy='55' r='4' fill='white' opacity='.9'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="css/styles.css?v=20260615-sidebar-icon-fix">
+</head>
+<body>
+
+  <section id="auth-screen" class="auth-screen">
+    <div class="auth-shell">
+      <div class="auth-hero">
+        <div class="auth-brand-lockup">
+          <span class="auth-logo-mark" aria-hidden="true">
+            <svg viewBox="0 0 36 36">
+              <defs>
+                <linearGradient id="auth-logo-grad" x1="5" y1="4" x2="31" y2="32" gradientUnits="userSpaceOnUse">
+                  <stop stop-color="#22d3ee"/>
+                  <stop offset="1" stop-color="#2563eb"/>
+                </linearGradient>
+              </defs>
+              <ellipse cx="18" cy="20" rx="7.6" ry="8.4" fill="url(#auth-logo-grad)"/>
+              <path d="M11 15c0-3.9 3.1-7 7-7s7 3.1 7 7v3H11v-3z" fill="url(#auth-logo-grad)"/>
+              <path d="M18 10.5v16" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/>
+              <circle cx="15" cy="19.7" r="1.5" fill="#fff"/>
+              <circle cx="21" cy="19.7" r="1.5" fill="#fff"/>
+              <path d="M10 16 5.4 13.2M26 16l4.6-2.8M9.6 20.5H4.8M26.4 20.5h4.8M10.3 25.2 5.8 28M25.7 25.2l4.5 2.8" stroke="#2563eb" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </span>
+          <span>BugRelay<span class="brand-accent">AI</span></span>
+        </div>
+
+        <h1>Stop Wasting<br>AI Tokens on<br>Repeated Bugs</h1>
+        <p class="auth-hero-sub">Now fix bug faster with <strong>BugRelayAI</strong></p>
+
+        <div class="auth-benefits">
+          <div class="auth-benefit">
+            <span class="auth-benefit-icon search" aria-hidden="true"></span>
+            <div>
+              <strong>Find Similar Bugs Instantly</strong>
+              <span>Search your code, error logs or stack traces and get similar bugs with proven fixes.</span>
+            </div>
+          </div>
+          <div class="auth-benefit">
+            <span class="auth-benefit-icon shield" aria-hidden="true"></span>
+            <div>
+              <strong>Reuse Proven Solutions</strong>
+              <span>Leverage past fixes from your team and the community to save time and AI tokens.</span>
+            </div>
+          </div>
+          <div class="auth-benefit">
+            <span class="auth-benefit-icon users" aria-hidden="true"></span>
+            <div>
+              <strong>Post Open Bugs &amp; Get Help</strong>
+              <span>Stuck on a bug? Post it publicly and get solutions from expert developers.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="auth-visual" aria-hidden="true">
+          <div class="auth-window">
+            <span></span><span></span><span></span>
+            <div class="auth-window-lines">
+              <i></i><i></i><i></i><i></i>
+            </div>
+            <div class="auth-code-lines">
+              <b></b><b></b><b></b><b></b>
+            </div>
+          </div>
+          <div class="auth-float-card found">
+            <span class="auth-card-icon check"></span>
+            <span>Similar Bugs Found</span>
+            <strong>12 matches</strong>
+          </div>
+          <div class="auth-float-card saved">
+            <span class="auth-card-icon bolt"></span>
+            <span>AI Tokens Saved</span>
+            <strong>2,450</strong>
+            <small>this week <em>+ 32%</em></small>
+          </div>
+          <div class="auth-float-card posted">
+            <span class="auth-card-icon ticket"></span>
+            <span>Open Bugs Posted</span>
+            <strong>8</strong>
+            <small>and counting</small>
+          </div>
+          <div class="auth-send-dot"></div>
+        </div>
+      </div>
+
+      <div class="auth-panel">
+        <form id="auth-form" class="auth-card" autocomplete="off">
+          <div class="auth-title" id="auth-title">Welcome back</div>
+          <div class="auth-subtitle">Login to continue to your account</div>
+
+          <div class="form-group" id="auth-name-group" style="display:none">
+            <label class="form-label" for="auth-name">Name</label>
+            <input type="text" id="auth-name" placeholder="Your name">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="auth-username">Email address</label>
+            <div class="auth-input-wrap">
+              <span class="auth-input-icon mail" aria-hidden="true"></span>
+              <input type="text" id="auth-username" required autocomplete="username" placeholder="Enter your email">
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="auth-label-row">
+              <label class="form-label" for="auth-password">Password</label>
+              <button class="auth-link" type="button">Forgot password?</button>
+            </div>
+            <div class="auth-input-wrap">
+              <span class="auth-input-icon lock" aria-hidden="true"></span>
+              <input type="password" id="auth-password" required minlength="6" autocomplete="current-password" placeholder="Enter your password">
+              <span class="auth-input-icon eye" aria-hidden="true"></span>
+            </div>
+          </div>
+          <label class="auth-remember">
+            <input type="checkbox">
+            <span>Remember me</span>
+          </label>
+          <button type="submit" class="btn btn-primary btn-full" id="auth-submit">Sign In</button>
+          <div class="auth-switch"><span id="auth-switch-copy">Don't have an account?</span> <button type="button" id="auth-toggle">Sign up</button></div>
+          <div class="auth-note">Default seeded account: admin / password123</div>
+        </form>
+
+        <div class="auth-feature-row" aria-hidden="true">
+          <div><span class="mini-icon shield"></span><strong>Save AI Tokens</strong><small>Reduce unnecessary AI token usage</small></div>
+          <div><span class="mini-icon bolt"></span><strong>Fix Faster</strong><small>Resolve bugs with proven solutions quickly</small></div>
+          <div><span class="mini-icon team"></span><strong>Community Powered</strong><small>Developers helping developers</small></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+       NAVBAR
+  â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+  <header id="navbar">
+    <div class="nav-brand">
+      <div class="nav-logo">
+        <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <defs>
+            <linearGradient id="logo-grad" x1="4" y1="3" x2="28" y2="29" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#22d3ee"/>
+              <stop offset="1" stop-color="#2563eb"/>
+            </linearGradient>
+          </defs>
+          <ellipse cx="16" cy="18" rx="6.8" ry="7.8" fill="url(#logo-grad)"/>
+          <path d="M9.8 13c0-3.4 2.8-6.2 6.2-6.2s6.2 2.8 6.2 6.2v2.2H9.8V13z" fill="url(#logo-grad)"/>
+          <path d="M16 10.2v14.5" stroke="#eff6ff" stroke-width="1.5" stroke-linecap="round"/>
+          <circle cx="13.4" cy="17.6" r="1.35" fill="#fff"/>
+          <circle cx="18.6" cy="17.6" r="1.35" fill="#fff"/>
+          <path d="M8.5 14.3 4.7 12M23.5 14.3l3.8-2.3M8 18.5H4M24 18.5h4M8.6 22.8 4.8 25M23.4 22.8l3.8 2.2" stroke="#2563eb" stroke-width="1.7" stroke-linecap="round"/>
+        </svg>
+        <span>BugRelay<span class="brand-accent">AI</span></span>
+      </div>
+      <div id="nav-stats" class="nav-stats"><!-- populated by JS --></div>
+    </div>
+    <div class="nav-actions">
+      <button id="btn-add-ticket" class="btn btn-secondary">New Ticket</button>
+      <div class="profile-menu" id="profile-menu">
+        <button id="profile-button" class="profile-button" type="button" aria-haspopup="true" aria-expanded="false">
+          <span id="current-user" class="current-user"></span>
+          <span class="account-caret" aria-hidden="true"></span>
+        </button>
+        <div id="profile-dropdown" class="profile-dropdown" role="menu">
+          <button id="btn-logout" class="profile-dropdown-item" type="button" role="menuitem">Sign Out</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+       MAIN LAYOUT
+  â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+  <div id="app-layout">
+
+    <!-- â”€â”€ LEFT SIDEBAR â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
+    <aside id="sidebar">
+
+      <!-- Upload Section -->
+      <div class="sidebar-section">
+        <div class="sidebar-label">Upload &amp; Analyze</div>
+
+        <div id="upload-zone" role="button" tabindex="0" aria-label="Upload file zone">
+          <span class="upload-icon file-symbol" aria-hidden="true">
+            <svg viewBox="0 0 48 56" xmlns="http://www.w3.org/2000/svg">
+              <path d="M10 3h20l12 12v35a3 3 0 0 1-3 3H10a3 3 0 0 1-3-3V6a3 3 0 0 1 3-3z" fill="#facc15" stroke="#ca8a04" stroke-width="2"/>
+              <path d="M30 3v12h12" fill="#fde68a" stroke="#ca8a04" stroke-width="2" stroke-linejoin="round"/>
+              <path d="M15 27h18M15 35h18M15 43h12" stroke="#854d0e" stroke-width="3" stroke-linecap="round"/>
+            </svg>
+          </span>
+          <div class="upload-title">Drop file here</div>
+          <div class="upload-sub">
+            <span id="browse-trigger">Browse</span> or drag &amp; drop<br>
+            .py .js .java .cpp .cs .log .txt
+          </div>
+        </div>
+        <input type="file" id="file-input" accept=".py,.js,.ts,.java,.cpp,.c,.cs,.php,.rb,.go,.rs,.txt,.log,.md">
+
+        <div class="or-divider">or paste below</div>
+
+        <textarea
+          id="paste-input"
+          placeholder="Paste error log, stack trace, or source code..."
+          rows="6"
+          spellcheck="false"
+          aria-label="Paste code or error log"></textarea>
+
+        <div style="margin-top:10px">
+          <button id="btn-analyze" class="btn btn-primary btn-full">Analyze &amp; Search</button>
+        </div>
+      </div>
+
+      <!-- Filters Section -->
+      <div class="sidebar-section">
+        <div class="sidebar-label">Filters</div>
+        <div class="form-group">
+          <label class="form-label" for="filter-priority">Priority</label>
+          <select id="filter-priority">
+            <option value="">All Priorities</option>
+            <option value="critical">Critical</option>
+            <option value="high">High</option>
+            <option value="medium">Medium</option>
+            <option value="low">Low</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="filter-status">Status</label>
+          <select id="filter-status">
+            <option value="">All Statuses</option>
+            <option value="open">Open</option>
+            <option value="resolved">Resolved</option>
+          </select>
+        </div>
+      </div>
+
+
+    </aside><!-- /sidebar -->
+
+    <!-- â”€â”€ MAIN CONTENT â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
+    <main id="main-content">
+
+      <!-- Tab Bar -->
+      <div class="tab-bar" role="tablist">
+        <button class="tab-btn active" data-tab="results" role="tab" aria-selected="true">
+          Results
+        </button>
+        <button class="tab-btn" data-tab="database" role="tab" aria-selected="false">
+          Database
+        </button>
+        <button class="tab-btn" data-tab="requests" role="tab" aria-selected="false">
+          Solution Requests
+        </button>
+        <button class="tab-btn" data-tab="learning" role="tab" aria-selected="false">
+          Learning Sources
+        </button>
+      </div>
+
+      <!-- â”€â”€ TAB: RESULTS â”€â”€â”€ -->
+      <div id="tab-results" class="tab-panel active" role="tabpanel">
+        <div id="results-header"></div>
+        <div id="results-list"></div>
+        <div id="empty-state"></div>
+      </div>
+
+      <!-- â”€â”€ TAB: DATABASE â”€â”€â”€ -->
+      <div id="tab-database" class="tab-panel" role="tabpanel">
+        <div id="db-toolbar">
+          <input
+            type="text"
+            id="db-search-input"
+            placeholder="Search tickets by keyword, ID, title..."
+            aria-label="Search database">
+          <select id="db-filter-status" aria-label="Filter by status" style="width:auto;flex-shrink:0">
+            <option value="">All Statuses</option>
+            <option value="open">Open</option>
+            <option value="resolved">Resolved</option>
+          </select>
+          <select id="db-filter-priority" aria-label="Filter by priority" style="width:auto;flex-shrink:0">
+            <option value="">All Priorities</option>
+            <option value="critical">Critical</option>
+            <option value="high">High</option>
+            <option value="medium">Medium</option>
+            <option value="low">Low</option>
+          </select>
+        </div>
+        <div id="db-list"><!-- populated by JS --></div>
+      </div>
+
+      <div id="tab-requests" class="tab-panel" role="tabpanel">
+        <div id="solution-requests-list"></div>
+      </div>
+
+      <!-- â”€â”€ TAB: LEARNING SOURCES â”€â”€â”€ -->
+      <div id="tab-learning" class="tab-panel" role="tabpanel">
+
+        <div class="learning-grid">
+        <div class="learn-card">
+          <div class="learn-card-header">
+            <div class="learn-icon learn-icon-github" aria-hidden="true">
+              <svg viewBox="0 0 32 32" role="img">
+                <circle cx="16" cy="16" r="15" fill="#2563eb"/>
+                <path fill="#fff" d="M16 6.5c-5.4 0-9.8 4.4-9.8 9.8 0 4.3 2.8 8 6.7 9.3.5.1.7-.2.7-.5v-1.9c-2.7.6-3.3-1.2-3.3-1.2-.4-1.1-1.1-1.4-1.1-1.4-.9-.6.1-.6.1-.6 1 0 1.6 1.1 1.6 1.1.9 1.5 2.4 1.1 3 .8.1-.7.4-1.1.7-1.3-2.2-.2-4.5-1.1-4.5-4.8 0-1.1.4-1.9 1-2.6-.1-.2-.4-1.2.1-2.5 0 0 .8-.3 2.7 1 .8-.2 1.5-.3 2.3-.3s1.6.1 2.3.3c1.8-1.2 2.7-1 2.7-1 .5 1.3.2 2.3.1 2.5.6.7 1 1.5 1 2.6 0 3.8-2.3 4.6-4.5 4.8.4.3.7.9.7 1.8v2.7c0 .3.2.6.7.5 3.9-1.3 6.7-5 6.7-9.3-.1-5.4-4.5-9.8-9.9-9.8z"/>
+              </svg>
+            </div>
+            <div>
+              <div class="learn-card-title">GitHub Issues Integration</div>
+              <div class="learn-card-sub">Fetch open and closed issues from any public GitHub repository and auto-convert to tickets</div>
+            </div>
+          </div>
+          <div class="learn-card-body">
+            <div class="form-group">
+              <label class="form-label" for="gh-repo-input">Repository (owner/repo)</label>
+              <input type="text" id="gh-repo-input" placeholder="e.g. python/cpython" aria-label="GitHub repository">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="gh-token-input">
+                Personal Access Token
+                <span style="color:var(--text-muted);font-weight:400">(optional, increases rate limit)</span>
+              </label>
+              <input type="password" id="gh-token-input" placeholder="ghp_xxxxxxxxxxxx" aria-label="GitHub token" autocomplete="off">
+            </div>
+            <button id="gh-fetch-btn" class="btn btn-secondary">Fetch Issues</button>
+            <div id="gh-progress-log" class="progress-log" aria-live="polite"></div>
+
+            <div style="margin-top:12px">
+              <div class="sidebar-label" style="margin-bottom:8px">Quick Repos to Try</div>
+              <div style="display:flex;flex-wrap:wrap;gap:6px">
+                <button class="btn btn-ghost btn-sm" onclick="document.getElementById('gh-repo-input').value='python/cpython'">python/cpython</button>
+                <button class="btn btn-ghost btn-sm" onclick="document.getElementById('gh-repo-input').value='nodejs/node'">nodejs/node</button>
+                <button class="btn btn-ghost btn-sm" onclick="document.getElementById('gh-repo-input').value='django/django'">django/django</button>
+                <button class="btn btn-ghost btn-sm" onclick="document.getElementById('gh-repo-input').value='torvalds/linux'">torvalds/linux</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="learn-card">
+          <div class="learn-card-header">
+            <div class="learn-icon learn-icon-production" aria-hidden="true">
+              <svg viewBox="0 0 40 40" role="img">
+                <path d="M6 10h13" stroke="#0f766e" stroke-width="2.4" stroke-linecap="round"/>
+                <path d="M14 6l5 4-5 4" fill="none" stroke="#0f766e" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M4 19h12" stroke="#38bdf8" stroke-width="2.4" stroke-linecap="round"/>
+                <path d="M11 15l5 4-5 4" fill="none" stroke="#38bdf8" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+                <ellipse cx="27" cy="11" rx="7" ry="3.5" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+                <path d="M20 11v14c0 1.9 3.1 3.5 7 3.5s7-1.6 7-3.5V11" fill="#bfdbfe" stroke="#2563eb" stroke-width="2"/>
+                <path d="M20 18c0 1.9 3.1 3.5 7 3.5s7-1.6 7-3.5" fill="none" stroke="#2563eb" stroke-width="2"/>
+              </svg>
+            </div>
+            <div>
+              <div class="learn-card-title">Production Logs Analysis</div>
+              <div class="learn-card-sub">Paste a production error log to auto-create a new bug ticket</div>
+            </div>
+          </div>
+          <div class="learn-card-body">
+            <div class="form-group">
+              <label class="form-label" for="prod-log-title">Ticket Title <span style="color:var(--text-muted)">(optional)</span></label>
+              <input type="text" id="prod-log-title" placeholder="e.g. Production crash in payment service" aria-label="Log title">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="prod-log-input">Log Content</label>
+              <textarea id="prod-log-input" rows="6" placeholder="Paste stack trace or error log here..." spellcheck="false" aria-label="Log content"></textarea>
+            </div>
+            <button id="btn-ingest-log" class="btn btn-secondary">Ingest Log</button>
+          </div>
+        </div>
+
+        <div class="learn-card">
+          <div class="learn-card-header">
+            <div class="learn-icon learn-icon-commit" aria-hidden="true">
+              <svg viewBox="0 0 40 40" role="img">
+                <path d="M15 5h15a5 5 0 0 1 5 5v15.5a4.5 4.5 0 0 1-4.5 4.5H18.5L10 36v-6H15a5 5 0 0 1-5-5V10a5 5 0 0 1 5-5z" fill="#2f9ee9" opacity=".9"/>
+                <path d="M7 12h21a6 6 0 0 1 6 6v10a6 6 0 0 1-6 6H18l-6.5 5v-5H7a6 6 0 0 1-6-6V18a6 6 0 0 1 6-6z" fill="#54aef0"/>
+                <circle cx="11.5" cy="23" r="2.2" fill="#fff"/>
+                <circle cx="17.8" cy="23" r="2.2" fill="#fff"/>
+                <circle cx="24.1" cy="23" r="2.2" fill="#fff"/>
+              </svg>
+            </div>
+            <div>
+              <div class="learn-card-title">Commit Message Customization</div>
+              <div class="learn-card-sub">Paste a git commit message or diff to create a resolved ticket</div>
+            </div>
+          </div>
+          <div class="learn-card-body">
+            <div class="form-group">
+              <label class="form-label" for="commit-input">Commit Message or Diff</label>
+              <textarea id="commit-input" rows="6" placeholder="Fix ZeroDivisionError in payment calculation&#10;&#10;Validate quantity > 0 before division.&#10;&#10;- total_price / quantity -> added guard clause&#10;+ if quantity == 0: raise ValueError(...)" spellcheck="false" aria-label="Commit message"></textarea>
+            </div>
+            <button id="btn-ingest-commit" class="btn btn-secondary">Ingest Commit</button>
+          </div>
+        </div>
+        </div>
+
+      </div><!-- /tab-learning -->
+
+    </main><!-- /main-content -->
+
+  </div><!-- /app-layout -->
+
+  <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+       TICKET DETAIL MODAL
+  â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+  <div id="ticket-modal-overlay" class="modal-overlay" role="dialog" aria-modal="true" aria-label="Bug Ticket Detail">
+    <div class="modal" id="ticket-modal-content">
+      <!-- Populated by JS -->
+    </div>
+  </div>
+
+  <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+       ADD TICKET MODAL
+  â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+  <div id="add-ticket-overlay" class="modal-overlay" role="dialog" aria-modal="true" aria-label="Add Bug Ticket">
+    <div class="modal" style="max-width:720px">
+      <div class="modal-header">
+        <div class="modal-header-left">
+          <div class="modal-title">Create New Bug Ticket</div>
+        </div>
+        <button class="modal-close" id="btn-close-add-modal" aria-label="Cancel">x</button>
+      </div>
+      <div class="modal-body">
+        <form id="add-form" autocomplete="off">
+
+          <div class="form-row">
+            <div class="form-group form-row-single">
+              <label class="form-label" for="f-title">Title *</label>
+              <input type="text" id="f-title" name="title" placeholder="e.g. ZeroDivisionError in payment calculation" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="f-status">Status *</label>
+              <select id="f-status" name="status" required>
+                <option value="open">Open</option>
+                <option value="resolved">Resolved</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="f-visibility">Visibility *</label>
+              <select id="f-visibility" name="visibility" required>
+                <option value="private" selected>Private</option>
+                <option value="public">Public</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="f-priority">Priority *</label>
+              <select id="f-priority" name="priority" required>
+                <option value="critical">Critical</option>
+                <option value="high">High</option>
+                <option value="medium" selected>Medium</option>
+                <option value="low">Low</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="f-language">Language</label>
+              <select id="f-language" name="language">
+                <option value="">Unknown</option>
+                <option value="python">Python</option>
+                <option value="javascript">JavaScript</option>
+                <option value="java">Java</option>
+                <option value="cpp">C / C++</option>
+                <option value="csharp">C#</option>
+                <option value="php">PHP</option>
+                <option value="ruby">Ruby</option>
+                <option value="go">Go</option>
+                <option value="rust">Rust</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="f-error-type">Error Type</label>
+              <input type="text" id="f-error-type" name="errorType" placeholder="e.g. ZeroDivisionError">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="f-description">Description *</label>
+            <textarea id="f-description" name="description" rows="4" placeholder="Describe the bug, when it occurs, and its impact..." required></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="f-tags">Tags <span style="color:var(--text-muted)">(comma-separated)</span></label>
+            <input type="text" id="f-tags" name="tags" placeholder="python, division, payment, critical">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="f-snippet-before">Code Snippet - Before Fix</label>
+            <textarea id="f-snippet-before" name="snippetBefore" rows="4" placeholder="Paste the buggy code..." spellcheck="false" style="font-family:var(--font-mono);font-size:12px"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="f-snippet-after">Code Snippet - After Fix</label>
+            <textarea id="f-snippet-after" name="snippetAfter" rows="4" placeholder="Paste the fixed code..." spellcheck="false" style="font-family:var(--font-mono);font-size:12px"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="f-snippet-diff">Code Diff</label>
+            <textarea id="f-snippet-diff" name="snippetDiff" rows="4" placeholder="Paste the unified diff (lines starting with + or -)..." spellcheck="false" style="font-family:var(--font-mono);font-size:12px"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="f-solution">Solution / Fix Description</label>
+            <textarea id="f-solution" name="solution" rows="3" placeholder="Describe how the bug was or should be fixed..."></textarea>
+          </div>
+
+          <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:8px">
+            <button type="button" class="btn btn-ghost" onclick="document.getElementById('add-ticket-overlay').classList.remove('open')">Cancel</button>
+            <button type="submit" class="btn btn-primary">Create Ticket</button>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+       TOAST CONTAINER
+  â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+  <div id="toast-container" role="status" aria-live="polite"></div>
+
+  <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+       SCRIPTS (order matters)
+  â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+  <script src="js/db.js?v=20260615-learning-profile"></script>
+  <script src="js/seed.js?v=20260615-learning-profile"></script>
+  <script src="js/parser.js?v=20260615-learning-profile"></script>
+  <script src="js/search.js?v=20260615-learning-profile"></script>
+  <script src="js/analyzer.js?v=20260615-learning-profile"></script>
+  <script src="js/github.js?v=20260615-learning-profile"></script>
+  <script src="js/rag.js?v=20260622-rag"></script>
+  <script src="js/ui.js?v=20260615-learning-profile"></script>
+
+</body>
+</html>

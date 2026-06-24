@@ -1,0 +1,17 @@
+{
+  "name": "bug-triage-ai",
+  "version": "1.0.0",
+  "private": true,
+  "description": "BugRelayAI with PostgreSQL persistence, JWT auth, and ticket approval workflow.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "deploy": "vercel --prod",
+    "test": "node tests/rag.test.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.2",
+    "pg": "^8.12.0"
+  }
+}
